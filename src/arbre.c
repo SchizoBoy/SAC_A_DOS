@@ -151,12 +151,16 @@ Arbre creer_arbre_objet_aux(
   Objet racine;
   Objet bouchon;
 
+  // On est arrivé à la fin de la liste d'objet
   if(pos == nb_obj){
-    racine.prix = liste_objet[pos-1].prix;
-    racine.poids = liste_objet[pos-1].poids;
+
+    // La racine est l'objet ou l'on se trouve
+    racine = liste_objet[pos-1];
+    // On se sert d'un bouchon pour les dernières branches de l'arbre
     bouchon.prix = 0;
     bouchon.poids = 0;
 
+    // On retourne l'arbre final
     return creer_arbre(
       racine,
       creer_noeud(bouchon, cout, poids),
@@ -169,10 +173,14 @@ Arbre creer_arbre_objet_aux(
       poids
     );
   }
+  // On insère récursivement les objets dans l'arbre en ajoutant ou non les
+  // caractéristiques de l'objet
   else{
-    racine.prix = liste_objet[pos-1].prix;
-    racine.poids = liste_objet[pos-1].poids;
+    // La racine est l'objet ou l'on se trouve
+    racine = liste_objet[pos-1];
 
+    // On retourne l'arbre en ajoutant au cout et au poids le prix et le poids
+    // de la racine au cout et au poids de la branche (uniquement à droite)
     return creer_arbre(
       racine,
       creer_arbre_objet_aux(liste_objet, nb_obj, pos+1, cout, poids),
