@@ -24,7 +24,7 @@ Objet racine(Arbre a){
 }
 
 /*Fonction permettant de créer un noeud avec sa racine*/
-Arbre creer_noeud(Objet racine, double prix, double poids){
+Arbre creer_noeud(Objet racine, double prix, double poids, int numero_racine){
   Arbre a = creer_arbre_vide();         /* On crée un arbre/noeud vide */
 
   a = (Noeud *)malloc(sizeof(Noeud));   /* Allocation de l'abre en mémoire */
@@ -37,6 +37,7 @@ Arbre creer_noeud(Objet racine, double prix, double poids){
   a->fils_droit = creer_arbre_vide();   /* De même que son fils droit */
   a->prix_br = prix;
   a->poids_br = poids;
+  a->numero_racine = numero_racine;
   return a;
 }
 
@@ -47,9 +48,10 @@ Arbre creer_arbre(
   Arbre fils_gauche,
   Arbre fils_droit,
   double prix,
-  double poids
+  double poids,
+  int numero_racine
 ){
-  Arbre a = creer_noeud(racine, prix, poids);  /* On crée un noeud */
+  Arbre a = creer_noeud(racine, prix, poids, numero_racine);
   a->fils_gauche = fils_gauche;   /* On lui greffe son fils gauche */
   a->fils_droit = fils_droit;     /* On lui greffe son fils droit */
 
@@ -92,7 +94,7 @@ void aff_noeud(Arbre a, int prof, int max_prof){
     for (i = 0; i < prof; i++){
       printf("                      ");
     }
-    printf("%f,%f <\n", a->prix_br, a->poids_br);
+    printf("%f,%f,%d <\n", a->prix_br, a->poids_br, a->numero_racine);
     aff_noeud(a->fils_gauche, prof+1, max_prof); /* On affiche le fils gauche */
   }
   else{                 /* Sinon (ie si le noeud est vide) : */
@@ -140,13 +142,23 @@ void detruire_arbre(Arbre a){
   }
 }
 
+// Fonction calculant une puissance
+int puissance(int a, int b){
+  int i, total = 1;
+  for(i = 0; i < b; i++){
+    total *= a;
+  }
+  return total;
+}
+
 // Fonctions auxiliaire de creer_arbre_objet()
 Arbre creer_arbre_objet_aux(
   Objet *liste_objet,
   int nb_obj,
   int pos,
   double cout,
-  double poids
+  double poids,
+  int numero_racine
 ){
   Objet racine;
   Objet bouchon;
@@ -163,14 +175,16 @@ Arbre creer_arbre_objet_aux(
     // On retourne l'arbre final
     return creer_arbre(
       racine,
-      creer_noeud(bouchon, cout, poids),
+      creer_noeud(bouchon, cout, poids, numero_racine),
       creer_noeud(
         bouchon,
         cout+liste_objet[pos-1].prix,
-        poids+liste_objet[pos-1].poids
+        poids+liste_objet[pos-1].poids,
+        numero_racine + puissance(2, pos-1)
       ),
       cout,
-      poids
+      poids,
+      numero_racine
     );
   }
   // On insère récursivement les objets dans l'arbre en ajoutant ou non les
@@ -183,21 +197,69 @@ Arbre creer_arbre_objet_aux(
     // de la racine au cout et au poids de la branche (uniquement à droite)
     return creer_arbre(
       racine,
-      creer_arbre_objet_aux(liste_objet, nb_obj, pos+1, cout, poids),
+      creer_arbre_objet_aux(
+        liste_objet,
+        nb_obj,
+        pos+1,
+        cout,
+        poids,
+        numero_racine
+      ),
       creer_arbre_objet_aux(
         liste_objet,
         nb_obj,
         pos+1,
         cout+liste_objet[pos-1].prix,
-        poids+liste_objet[pos-1].poids
+        poids+liste_objet[pos-1].poids,
+        numero_racine + puissance(2, pos-1)
       ),
       cout,
-      poids
+      poids,
+      numero_racine
     );
   }
 }
 
 // Crée un arbre avec des objets ayant un prix et un poids
 Arbre creer_arbre_objet(Objet *liste_objet, int nb_obj){
-  return creer_arbre_objet_aux(liste_objet, nb_obj, 1, .0, .0);
+  return creer_arbre_objet_aux(liste_objet, nb_obj, 1, .0, .0, 0);
+}
+
+int *int_to_binaire(int puissance){
+  int *resultat, i, temp, taille;
+
+  resultat = malloc(128 * sizeof(int));
+  if(resultat == NULL){
+    fprintf(stderr, "Erreur d'allocation, fonction : int_to_binaire()\n");
+    exit(0);
+  }
+
+  taille = 0;
+  i = 0;
+  while(puissance != 0){
+    resultat[i] = puissance % 2;
+    puissance /= 2;
+    i++;
+    taille++;
+  }
+
+  for(i = 0; i < taille/2; i++){
+    temp = resultat[taille-i-1];
+    resultat[taille-i-1] = resultat[i];
+    resultat[i] = temp;
+  }
+  resultat[taille] = -1;
+
+  return resultat;
+}
+
+void choix_objet(Objet liste_obj, int *binaire){
+  int i;
+
+  printf("Pour le sac à dos il fallait choisir :\n\n");
+  while(binaire[i] != -1){
+    if(binaire[i] == 1){
+      printf("    - L'objet numéro %d\n", i+1);
+    }
+  }
 }
