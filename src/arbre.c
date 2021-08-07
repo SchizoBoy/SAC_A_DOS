@@ -254,12 +254,13 @@ int *int_to_binaire(int puissance){
 }
 
 void choix_objet(Objet liste_obj, int *binaire){
-  int i;
+  int i = 0;
 
   printf("Pour le sac à dos il fallait choisir :\n\n");
   while(binaire[i] != -1){
     if(binaire[i] == 1){
       printf("    - L'objet numéro %d\n", i+1);
     }
+    i++;
   }
 }

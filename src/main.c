@@ -26,7 +26,7 @@ int main(void){
 
   arbre_obj = creer_arbre_objet(liste_obj, 3);
   afficher_arbre(arbre_obj);
-  max = recherche_sol(arbre_obj, poids_sac);
+  max = recherche_sol(arbre_obj, poids_sac)[0];
   printf("VOICI LE MAXIMUM : %f \n", max );
 
   binaire = int_to_binaire(35);
@@ -37,7 +37,7 @@ int main(void){
   }
   putchar('\n');
 
-  
+
 
   exit(0);
 }
