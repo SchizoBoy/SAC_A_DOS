@@ -17,7 +17,7 @@ typedef struct Noeud{
   struct Noeud *fils_droit;
   double prix_br;     // Prix de la branche
   double poids_br;    // Poids de la branche
-  int numero_racine;  // numero de racine (choix unique)
+  double numero_racine;  // numero de racine (choix unique)
 }Noeud;
 
 /* Création des arbres */

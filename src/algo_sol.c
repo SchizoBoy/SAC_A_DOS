@@ -2,42 +2,56 @@
 #include <stdio.h>
 #include "arbre.h"
 
-double * recherche_sol_aux(Arbre a,double prix_max, double poids_sac, int pos_arbre, double * couple_sol){
-  double couple_max_g[2], couple_max_d[2];
+double recherche_sol_aux(Arbre a,double prix_max, double poids_sac, double * couple_sol){
+  double prix_max_g, prix_max_d;
 
   if(est_vide(a)){
-    return couple_sol;
+    return prix_max;
   }
 
   /*Le poids des objets dans le sac est plus grands que la capacité du sac*/
   /*On étudie seulement la branche de gauche*/
   if((a->poids_br + (a->racine).poids )> poids_sac){
-    return recherche_sol_aux(a->fils_gauche, prix_max, poids_sac, pos_arbre+1, couple_sol);
+    return recherche_sol_aux(a->fils_gauche, prix_max, poids_sac, couple_sol);
   }
   /*Sinon on va devoir regarder les deux branches fils*/
   else{
-    couple_max_g[0] = (recherche_sol_aux(a->fils_gauche, prix_max, poids_sac, pos_arbre+1, couple_sol))[0];
-    couple_max_g[1] = (recherche_sol_aux(a->fils_gauche, prix_max, poids_sac, pos_arbre+1, couple_sol))[1];
-    couple_max_d[0] = (recherche_sol_aux(a->fils_droit, prix_max+ (a->racine).prix, poids_sac, pos_arbre+1, couple_sol))[0];
-    couple_max_d[1] = (recherche_sol_aux(a->fils_droit, prix_max+ (a->racine).prix, poids_sac, pos_arbre+1, couple_sol))[1];
+    prix_max_g = recherche_sol_aux(a->fils_gauche, prix_max, poids_sac, couple_sol);
+    prix_max_d = recherche_sol_aux(a->fils_droit, prix_max+ (a->racine).prix, poids_sac, couple_sol);
 
-    if(couple_max_d[0]>couple_max_g[0]){
-      couple_sol[0]=couple_max_d[0];
-      couple_sol[1]= couple_max_d[1];
-      return couple_sol;
+    if(prix_max_d>prix_max_g){
+      couple_sol[0]=prix_max_d;
+      if (!est_vide(a->fils_droit)) {
+        if (a->fils_droit->numero_racine > couple_sol[1]) {
+          couple_sol[1]=a->fils_droit->numero_racine;
+        }
+      }
+      return prix_max_d;
     }else{
-      couple_sol[0]=couple_max_g[0];
-      couple_sol[1]= couple_max_d[1];
-      return couple_sol;
+      couple_sol[0]=prix_max_g;
+      if (!est_vide(a->fils_gauche)) {
+        if (a->fils_gauche->numero_racine > couple_sol[1]) {
+          couple_sol[1]=a->fils_gauche->numero_racine;
+        }
+
+      }
+      return prix_max_g;
     }
   }
 
 }
 
 double * recherche_sol(Arbre arbre_jeu, double poids_sac){
-  double couple_sol[2] = {0.0}; /*La première valeur correspond au prix maximum,
-  et la deuxième à une solution pour avoir ce prix*/
-  couple_sol[0]= (recherche_sol_aux(arbre_jeu, 0, poids_sac, 0, couple_sol))[0];
-  couple_sol[1]= (recherche_sol_aux(arbre_jeu, 0, poids_sac, 0, couple_sol))[1];
+  double prix_max;
+  double * couple_sol;
+
+  couple_sol=(double*)malloc(sizeof(double)*2);
+  if(couple_sol==NULL){
+    printf("Problème de malloc\n" );
+    return NULL;
+  }
+
+  recherche_sol_aux(arbre_jeu, 0, poids_sac,couple_sol);
+
   return couple_sol;
 }

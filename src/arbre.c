@@ -94,7 +94,7 @@ void aff_noeud(Arbre a, int prof, int max_prof){
     for (i = 0; i < prof; i++){
       printf("                      ");
     }
-    printf("%f,%f,%d <\n", a->prix_br, a->poids_br, a->numero_racine);
+    printf("%f,%f,%f <\n", a->prix_br, a->poids_br, a->numero_racine);
     aff_noeud(a->fils_gauche, prof+1, max_prof); /* On affiche le fils gauche */
   }
   else{                 /* Sinon (ie si le noeud est vide) : */
