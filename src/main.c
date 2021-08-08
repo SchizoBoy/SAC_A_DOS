@@ -2,10 +2,13 @@
 #include <stdio.h>
 #include "arbre.h"
 #include "algo_sol.h"
+#include "graphisme.h"
 
 int main(void){
+
   Arbre arbre_obj;
   Objet liste_obj[4];
+  double *solution;
   double max;
   int *binaire;
   int i, poids_sac;
@@ -29,15 +32,13 @@ int main(void){
   max = recherche_sol(arbre_obj, poids_sac)[0];
   printf("VOICI LE MAXIMUM : %f \n", max );
 
-  binaire = int_to_binaire(35);
-  i = 0;
-  while(binaire[i] != -1){
-    printf("%d ", binaire[i]);
-    i++;
-  }
+  solution = recherche_sol(arbre_obj, 70);
+  binaire = int_to_binaire((int)solution[1]);
+
   putchar('\n');
 
-
+  choix_objet(liste_obj, binaire, 70);
+  // fenetre();
 
   exit(0);
 }

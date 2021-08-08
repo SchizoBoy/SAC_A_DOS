@@ -64,6 +64,6 @@ Arbre creer_arbre_objet(Objet *liste_objet, int nb_obj);
 int *int_to_binaire(int puissance);
 
 // Fonction analysant le binaire sortit de l'analyse de l'arbre
-void choix_objet(Objet liste_obj, int *binaire);
+void choix_objet(Objet *liste_obj, int *binaire, double poids);
 
 #endif

@@ -92,14 +92,14 @@ void aff_noeud(Arbre a, int prof, int max_prof){
   if(!est_vide(a)) {    /* Si le noeud n'est pas vide : */
     aff_noeud(a->fils_droit, prof+1, max_prof); /* On affiche le fils droit */
     for (i = 0; i < prof; i++){
-      printf("                      ");
+      printf("                                ");
     }
     printf("%f,%f,%f <\n", a->prix_br, a->poids_br, a->numero_racine);
     aff_noeud(a->fils_gauche, prof+1, max_prof); /* On affiche le fils gauche */
   }
   else{                 /* Sinon (ie si le noeud est vide) : */
     for (i = 0; i < prof; i++) {
-      printf("                      ");
+      printf("                                ");
     }
     printf("NULL\n");     /* On affiche NULL puisque le noeud est vide */
   }
@@ -253,13 +253,15 @@ int *int_to_binaire(int puissance){
   return resultat;
 }
 
-void choix_objet(Objet liste_obj, int *binaire){
+void choix_objet(Objet *liste_obj, int *binaire, double poids){
   int i = 0;
 
-  printf("Pour le sac à dos il fallait choisir :\n\n");
+  printf("Pour un sac à dos de poids max : %f kg les objets sont :\n\n", poids);
   while(binaire[i] != -1){
     if(binaire[i] == 1){
       printf("    - L'objet numéro %d\n", i+1);
+      printf("        prix : %f euros\n", liste_obj[i].prix);
+      printf("        poids : %f kg\n\n", liste_obj[i].poids);
     }
     i++;
   }

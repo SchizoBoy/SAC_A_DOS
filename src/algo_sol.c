@@ -42,7 +42,6 @@ double recherche_sol_aux(Arbre a,double prix_max, double poids_sac, double * cou
 }
 
 double * recherche_sol(Arbre arbre_jeu, double poids_sac){
-  double prix_max;
   double * couple_sol;
 
   couple_sol=(double*)malloc(sizeof(double)*2);
